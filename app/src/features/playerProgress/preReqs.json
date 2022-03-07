@@ -1,0 +1,47 @@
+ [
+  {
+    "id": 2,
+    "reqs": {
+
+    },
+    "promptType": 1,
+    "nextSurvey": 3,
+    "url": "http://curiousreader.org/zu/survey/oral-vocab-zulu"
+  },
+  {
+    "id": 3,
+    "reqs": {
+
+    },
+    "promptType": 1,
+    "nextSurvey": 4,
+    "url": "http://curiousreader.org/zu/survey/letter-sound-zulu"
+  },
+  {
+    "id": 4,
+    "reqs": {
+
+    },
+    "promptType": 2,
+    "nextSurvey": 5,
+    "url": "http://curiousreader.org/zu/survey/reading-vocab-zulu"
+  },
+  {
+    "id": 5,
+    "reqs": {
+      "score": 100
+    },
+    "promptType": 1,
+    "nextSurvey": 6,
+    "url": "http://curiousreader.org/zu/survey/sight-words-zulu"
+  },
+  {
+    "id": 6,
+    "reqs": {
+      "score": 100
+    },
+    "promptType": 1,
+    "nextSurvey": 1,
+    "url": "http://curiousreader.org/zu/survey/pseudo-words-zulu"
+  }
+]
