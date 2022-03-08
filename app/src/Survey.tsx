@@ -9,6 +9,7 @@ import EventService from './features/xAPI/eventService';
 import { useAppDispatch, useAppSelector } from './hooks';
 import {
     selectSurveyConfig,
+    selectFeedback,
     selectAutoProgression,
     selectUiText,
     selectOptionStyle,
@@ -22,7 +23,6 @@ import {
     // Selectors
     selectActiveTask,
     selectSurveyState,
-    selectShouldLoadNextTask,
     selectSurveyIsCompleted,
 } from './features/survey/surveySlice';
 import { SurveyType, PromptType, ITask, ITarget } from './features/models';
@@ -37,6 +37,7 @@ import {
 } from './components/';
 import {
     Answers,
+    AnswerWrapper,
     CharacterWrapper,
     CheckAnswer,
     ContentWrapper,
@@ -62,17 +63,25 @@ const Survey = (props: any) => {
     const autoProgression = useAppSelector(selectAutoProgression);
     const surveyState = useAppSelector(selectSurveyState);
     const surveyConfig = useAppSelector(selectSurveyConfig);
+    const feedback = useAppSelector(selectFeedback);
     const uiText = useAppSelector(selectUiText);
-    const shouldLoadNextTask = useAppSelector(selectShouldLoadNextTask)
     const promptComplete = useAppSelector(state => state.survey.promptComplete);
     const userId = useAppSelector(state => state.config.userId);
     const organization = useAppSelector(state => state.config.organization);
     const promptType = useAppSelector(state => state.playerProgress.promptType);
 
+    const [shouldLoadNextTask, setShouldLoadNextTask] = useState(false);
     const[taskAnswered, setTaskAnswered] = useState(false);
     const [selectedOptionIndex, setSelectedOption] = useState(null);
     const [animate, setAnimate] = useState(false);
     const [taskStartTime, setTaskStartTime] = useState(0);
+
+    console.log(feedback.feedbackAudio);
+    const feedbackAudioPath = H5P.getPath(
+      feedback.feedbackAudio? feedback.feedbackAudio[0].path : "",
+      surveyConfig.contentId
+    );
+
 
     const eService = new EventService();
 
@@ -92,6 +101,7 @@ const Survey = (props: any) => {
 
     useEffect(() => {
       setTaskStartTime(Date.now());
+      resizeH5P();
     }, [promptComplete]);
 
     useEffect(() => {
@@ -107,13 +117,15 @@ const Survey = (props: any) => {
             setTimeout(() => {
               dispatch(loadNextTask())
               dispatch(setPromptStatus(false));
+              setTaskAnswered(false);
             }, 2)
+          setShouldLoadNextTask(false);
         }
     }, [shouldLoadNextTask])
 
    const handleNext = useCallback(() => {
       if (!surveyIsCompleted ) {
-          dispatch(loadNextTask())
+          setShouldLoadNextTask(true);
       }
     }, [surveyIsCompleted, surveyState])
 
@@ -148,6 +160,7 @@ const Survey = (props: any) => {
 
 
     const handleAnswer = (option: number) => {
+      setTaskAnswered(true);
       setSelectedOption(option);
       eService.logEvent('interacted', activeTask);
     }
@@ -177,13 +190,15 @@ const Survey = (props: any) => {
             />
           );
         }
-        return (<Option
+        return (
+          <Option
             key={`option-${index}]}}`}
             data={item}
             onClick={() => handleAnswer(index)}
             selected={index === selectedOptionIndex}
             disabled={selectedOptionIndex !== null && taskAnswered}
-        />)
+        />
+      )
      })
     }
 
@@ -194,25 +209,38 @@ const Survey = (props: any) => {
                     { !showDebug && <CharacterWrapper>
                         <Character
                             animate={animate}
-                            feedbackAudio={surveyConfig.feedbackAudioPath}
+                            feedbackAudio={feedbackAudioPath}
                             onAnimationEnd={onAnimationEnd}
-                            successfulAnimation={surveyConfig.feedbackAnimation}
+                            successfulAnimation={feedback.feedbackAnimation}
                         />
-                    { activeTask && activeTask.audioFile
+                    { activeTask && !taskAnswered && activeTask.audioFile
                         && !surveyIsCompleted &&
-                        <AudioPlayer audio={activeTask.audioFile} autoplay={false} />}
+                        <AudioPlayer
+                          audio = {activeTask.audioFile}
+                          autoplay = {false}
+                        />
+                    }
                     </CharacterWrapper> }
 
                     { activeTask && activeTask.text &&
-                      !surveyIsCompleted &&
+                      !surveyIsCompleted && !taskAnswered &&
                       <TextDisplay text={activeTask.text}/>
                     }
 
                 </Instructions>
                   { (promptType === PromptType.Visual || promptComplete)
-                  && activeTask && activeTask.items && !surveyIsCompleted &&
+                  && activeTask && activeTask.items &&
+                  !taskAnswered && !surveyIsCompleted &&
                   <>
-                    <Answers length={activeTask.items.length} hasAnswer={selectedOptionIndex} optionStyle={optionStyle} mixedCaseFriendly={surveyConfig.mixedCaseFriendlyFont}>
+                    <Answers length={
+                      activeTask.items.length
+                    } hasAnswer={
+                      selectedOptionIndex
+                    } optionStyle={
+                      optionStyle
+                    } mixedCaseFriendly={
+                      surveyConfig.mixedCaseFriendlyFont
+                    }>
                         { mapAnswers(activeTask.items) }
                     </Answers>
                 </> }
@@ -225,9 +253,13 @@ const Survey = (props: any) => {
             </CheckAnswer> }
             { taskAnswered ?
                 <FeedbackWrapper success>
-                    <div dangerouslySetInnerHTML={generateMarkup(uiText.feedbackText)} />
+                    <div dangerouslySetInnerHTML={
+                      generateMarkup(feedback.feedbackText)
+                    } />
                     {(!autoProgression) ?
-                      <Button success onClick={handleNext}>{uiText.continueButtonText}</Button>: null
+                      <Button success onClick={handleNext}>
+                        {uiText.continueButtonText}
+                      </Button>: null
                     }
                 </FeedbackWrapper> : null
             }

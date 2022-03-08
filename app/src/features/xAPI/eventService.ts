@@ -1,8 +1,6 @@
 declare var H5P: any;
-declare var Unity: any;
 
 H5P = H5P || {};
-Unity = Unity || {};
 
 import * as models from './eventModels';
 import { ITarget, ITask } from '../models';
@@ -33,7 +31,7 @@ export default class EventService {
     var definition = xAPIEvent.getVerifiedStatementValue(['object', 'definition']);
     // Clean html markup from the question
     var div = document.createElement("div");
-    div.innerHTML = e.target.text;
+    div.innerHTML = e.text;
     var taskText = div.textContent || div.innerText || "";
     // console.log({ definition })
     definition.description = {
@@ -44,7 +42,6 @@ export default class EventService {
     definition.correctResponsesPattern = [];
     definition.choices = [];
     // Add answer options and answer pattern here
-    let target;
     e.items.forEach((item: any, index: number) => {
         div.innerHTML = item.text;
         definition.choices.push({
@@ -53,22 +50,15 @@ export default class EventService {
                 'en-US': (div.textContent || div.innerText || '').replace(/(\r\n|\n|\r)/gm,""),
             },
         });
-        if (item.correct) {
-            target = item.text;
-            definition.correctResponsesPattern.push('option-' + index);
-        }
     })
-    xAPIEvent.data.statement.object['id'] = `https://data.curiouslearning.org/xAPI/activities/survey/${e.survey}/bucket/${e.bucket}/target/${target}`;
-    xAPIEvent.setScoredResult(e.score, 1, this, true, e.score > 0 ? true : false)
-    xAPIEvent.data.statement.result.response = 'option-' + e.selectedOptionIndex;
-    xAPIEvent.data.statement.result.success = e.result;
-    xAPIEvent.data.statement.result.duration= `PT${e.duration/1000}S`
+    xAPIEvent.data.statement.object['id'] = `https://data.curiouslearning.org/xAPI/activities/survey/${e.survey}/question/${e.text}`;
+    xAPIEvent.data.statement['result'] = {
+      response: 'option-' + e.selectedOptionIndex,
+      duration: `PT${e.duration/1000}S`
+    };
     xAPIEvent.data.statement['context'] = {
       contextActivities: {
         parent: [{
-          id: `https://data.curiouslearning.org/xAPI/activities/survey/${e.survey}/bucket/${e.bucket}`
-        }],
-        grouping: [{
           id: `https://data.curiouslearning.org/xAPI/activities/survey/${e.survey}`
         }]
       }
@@ -87,19 +77,9 @@ export default class EventService {
     let definition = xAPIEvent.getVerifiedStatementValue(['object', 'definition']);
     definition.type = 'http://adlnet.gov/expapi/activities/survey';
     xAPIEvent.data.statement.timestamp = new Date(Date.now()).toISOString();
-    if(e.score) {
-      xAPIEvent.setScoredResult(
-          e.score.score,
-          e.score.maxScore,
-          this,
-          true,
-          e.score.score > 0 ? true: false
-      );
-      xAPIEvent.data.statement.result['completion'] = e.completion? e.completion: false;
-      xAPIEvent.data.statement.result['success'] = e.success? e.success: false;
-      if(e.duration) {
-        xAPIEvent.data.statement.result['duration'] = `PT${e.duration/1000}S`;
-      }
+    xAPIEvent.data.statement['result'] = {
+      completion: e.completion? e.completion: false,
+      duration: e.duration ? `PT${e.duration/1000}S` : null
     }
     this.H5PDispatcher.trigger(xAPIEvent);
   }
@@ -139,40 +119,6 @@ export default class EventService {
       };
   }
 
-  logBucketCompletedStatement(e: any) {
-    let xAPIEvent = this.H5PDispatcher.createXAPIEventTemplate('terminated');
-    let actor: models.IAgent = this.getAgent(e.userId, e.organization);
-    xAPIEvent.data.statement.object['objectType'] = 'Activity';
-    xAPIEvent.data.statement.object['id'] = `https://data.curiouslearning.org/xAPI/activities/survey/${e.survey}/buckets/${e.bucket}`;
-    let definition = xAPIEvent.getVerifiedStatementValue(['object', 'definition']);
-    definition.type = `https://data.curiouslearning.org/xAPI/activities/survey/bucket/${e.bucketType}`
-    xAPIEvent.data.statement.timestamp = new Date(Date.now()).toISOString();
-    xAPIEvent.data.statement['result'] = {
-      completion: true,
-      success: e.success,
-      score: {
-        min: 0,
-        max: e.maxScore,
-        raw: e.score,
-        scaled: e.score
-      },
-      duration: `PT${e.duration/1000}S`
-    };
-     xAPIEvent.data.statement['context'] = {
-      contextActivities: {
-        parent:  [{
-          id: `https://datacuriouslearning.org/xAPI/activities/survey/${e.survey}`
-        }],
-        category: [{
-          id: `https://data.curiouslearning.org/xAPI/activities/survey/bucket/`
-        }, {
-          id: `https://data.curiouslearning.org/xAPI/activities/survey/bucket/${e.bucketType}`
-        }]
-      }
-    };
-    this.H5PDispatcher.trigger(xAPIEvent);
-  }
-
   logEvent(name: string, e: any) {
     switch(name) {
       case 'answered':
@@ -185,9 +131,6 @@ export default class EventService {
         this.logRegisteredStatement(e.actor, e);
       case 'terminated':
         this.logSurveyObjectStatement(name, e);
-        break;
-      case 'bucketCompleted':
-        this.logBucketCompletedStatement(e);
         break;
       case 'scored':
         this.logAnsweredEvent(name, e);

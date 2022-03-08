@@ -8,7 +8,6 @@ interface ConfigState {
     organization: string;
     passPercentage?: number;
     uiText: {
-      feedbackText: string;
       resultText: string;
       solutionButtonText: string;
       retryButtonText: string;
@@ -22,8 +21,11 @@ interface ConfigState {
       enabled: boolean;
       delayTime: number;
     };
-    feedbackAnimation: string;
-    feedbackAudioPath: string;
+    feedback: {
+      feedbackText: string;
+      feedbackAnimation: string;
+      feedbackAudio: any;
+    }
     endGame?: {
         successFeedback: any;
         failFeedback: any;
@@ -51,8 +53,11 @@ const initialState:ConfigState = {
       continueButtonText: '',
       checkAnswerText: ''
     },
-    feedbackAnimation: '',
-    feedbackAudioPath: '',
+    feedback: {
+      feedbackText: '',
+      feedbackAnimation: '',
+      feedbackAudio: [],
+    },
     isWebview: false,
     autoProgression: {
         enabled: false,
@@ -113,13 +118,13 @@ export const selectOptionStyle = (state: IRootState) => state.config.optionStyle
 export const selectUiText = (state: IRootState) => state.config.uiText;
 export const selectIsWebView = ( state: IRootState ) => state.config.isWebview;
 export const selectUserId = ( state: IRootState ) => state.config.userId;
+export const selectFeedback = ( state: IRootState ) => state.config.feedback;
 export const selectSurveyConfig = (state: IRootState) => {
-    const { surveyId, feedbackAudioPath, feedbackAnimation, autoProgression, uiText, contentId, userId, mixedCaseFriendlyFont, testAllInBasalCeiling } = state.config;
+    const { surveyId, feedback, autoProgression, uiText, contentId, userId, mixedCaseFriendlyFont, testAllInBasalCeiling } = state.config;
     return {
         surveyId,
         uiText,
-        feedbackAnimation,
-        feedbackAudioPath,
+        feedback,
         autoProgression,
         contentId,
         userId,

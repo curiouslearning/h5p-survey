@@ -1,11 +1,11 @@
 {
   "title": " Survey",
   "language": "en",
-  "author": "OER",
+  "author": "Curious Learning",
   "license": "CC BY-SA",
   "licenseVersion": "4.0",
   "authors":[{
-    "name":"Robert Fohlin",
+    "name":"Eric Glickman-Tondreau",
     "role":"Developer"
   }],
   "preloadedDependencies": [

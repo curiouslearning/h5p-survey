@@ -1,8 +1,8 @@
 declare var H5P: any;
-declare var Unity: any;
+// declare var Unity: any;
 
 H5P = H5P || {};
-Unity = Unity || {};
+// Unity = Unity || {};
 
 import React from 'react';
 import { useAppSelector, useAppDispatch } from '../../hooks'
@@ -16,7 +16,7 @@ interface IOptionStyled {
 
 const Wrapper = styled('li')<IOptionStyled>`
     flex-basis: calc(50% - 10px);
-    height: 175px;
+    max-height: 128px;
     box-sizing: border-box;
     display: inline-flex;
     align-items: center;
@@ -24,6 +24,7 @@ const Wrapper = styled('li')<IOptionStyled>`
     font-weight: 700;
     font-size: 20px;
     flex-shrink: 0;
+    margin-bottom: 30px;
 
     button {
         background-color: #f7f7f7;
@@ -32,8 +33,8 @@ const Wrapper = styled('li')<IOptionStyled>`
         flex-grow: 1;
         border-radius: 10px;
         border: 2px solid #969696;
-        height: 150px;
-        padding: 10px;
+        max-height: 150px;
+        padding: 5px;
         margin: 10px;
         color: #525464;
 

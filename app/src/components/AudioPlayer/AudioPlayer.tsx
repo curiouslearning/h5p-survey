@@ -1,8 +1,8 @@
 declare var H5P: any;
-declare var Unity: any;
+// declare var Unity: any;
 
 H5P = H5P || {};
-Unity = Unity || {};
+// Unity = Unity || {};
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useAppSelector, useAppDispatch } from '../../hooks'

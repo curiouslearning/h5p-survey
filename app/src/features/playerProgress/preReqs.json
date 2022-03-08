@@ -1,4 +1,11 @@
  [
+   {
+     "id": 1,
+     "reqs": {},
+     "promptType": 1,
+     "nextSurvey": 2,
+     "url": "http://curiousreader.org/zu/survey/nonliterate-ses-zulu"
+   },
   {
     "id": 2,
     "reqs": {
@@ -6,7 +13,7 @@
     },
     "promptType": 1,
     "nextSurvey": 3,
-    "url": "http://curiousreader.org/zu/survey/oral-vocab-zulu"
+    "url": "http://curiousreader.org/zu/assessment/oral-vocab-zulu"
   },
   {
     "id": 3,
@@ -15,7 +22,7 @@
     },
     "promptType": 1,
     "nextSurvey": 4,
-    "url": "http://curiousreader.org/zu/survey/letter-sound-zulu"
+    "url": "http://curiousreader.org/zu/assessment/letter-sound-zulu"
   },
   {
     "id": 4,
@@ -24,7 +31,7 @@
     },
     "promptType": 2,
     "nextSurvey": 5,
-    "url": "http://curiousreader.org/zu/survey/reading-vocab-zulu"
+    "url": "http://curiousreader.org/zu/assessment/reading-vocab-zulu"
   },
   {
     "id": 5,
@@ -33,7 +40,7 @@
     },
     "promptType": 1,
     "nextSurvey": 6,
-    "url": "http://curiousreader.org/zu/survey/sight-words-zulu"
+    "url": "http://curiousreader.org/zu/assessment/sight-words-zulu"
   },
   {
     "id": 6,
@@ -42,6 +49,6 @@
     },
     "promptType": 1,
     "nextSurvey": 1,
-    "url": "http://curiousreader.org/zu/survey/pseudo-words-zulu"
+    "url": "http://curiousreader.org/zu/assessment/pseudo-words-zulu"
   }
 ]

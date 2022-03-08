@@ -1,8 +1,6 @@
 declare var H5P: any;
-declare var Unity: any;
 
 H5P = H5P || {};
-Unity = Unity || {};
 
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';

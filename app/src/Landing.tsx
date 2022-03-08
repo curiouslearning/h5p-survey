@@ -1,8 +1,6 @@
 declare var H5P: any;
-declare var Unity: any;
 
 H5P = H5P || {};
-Unity = Unity || {};
 
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -16,7 +14,7 @@ import {
   getNextSurveyIndex
 } from './features/playerProgress/utils';
 import {
-    initSurvey,
+    loadNextTask,
     // Selectors
 } from './features/survey/surveySlice';
 import {
@@ -119,8 +117,8 @@ const Landing = () => {
         actions.style.visibility = "hidden";
         Unity.call('loaded');
       } catch(e) {
-        if(e.msg !== 'Unity is not defined') {
-          throw e;
+        if(e.message !== 'Unity is not defined') {
+          console.warn(e.message);
         }
 
       }
@@ -143,8 +141,8 @@ const Landing = () => {
                     if (utmParams.hasOwnProperty('isWebview')) {
                       dispatch(setIsWebview(utmParams.isWebview === "true"));
                     }
-                    dispatch(initSurvey(surveyConfig));
                     initializeAgentMetadata(utmParams);
+                    dispatch(loadNextTask());
                     dispatch(setAppView('quiz'))
                     eService.logEvent('initialized', {
                       userId: utmParams.uuid,

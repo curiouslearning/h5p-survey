@@ -4,7 +4,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   mode: 'production',
-  entry: './src/index.ts',
+  entry: './app/src/index.ts',
   module: {
     rules: [
       {
@@ -41,7 +41,7 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {
-          from: 'src/**.json',
+          from: './app/src/**.json',
           to: '[name][ext]'
         }
       ]
