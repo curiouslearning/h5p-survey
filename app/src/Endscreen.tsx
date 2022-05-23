@@ -28,6 +28,7 @@ import {
   selectContentId,
   selectUiText,
   selectIsWebView,
+  selectIdentifiers
 } from './features/config/configSlice';
 import { setAppView } from './features/ui/uiSlice';
 import EventService from './features/xAPI/eventService';
@@ -71,8 +72,7 @@ const Actions = styled.div`
 `
 
 const Endscreen = (props: any) => {
-    const userId = useAppSelector((state) => state.config.userId);
-    const organization = useAppSelector((state) => state.config.organization);
+    const identifiers = useAppSelector(selectIdentifiers);
     const surveyId = useAppSelector(state => state.config.surveyId);
     const eService = new EventService();
     const dispatch = useAppDispatch();
@@ -93,8 +93,10 @@ const Endscreen = (props: any) => {
         dispatch(setSurveyCompleted())
         // Log that the quiz has been completed
         eService.logEvent('terminated', {
-          userId,
-          organization,
+          userId: identifiers.userId,
+          organization: identifiers.organization,
+          agentName: identifiers.agentName,
+          registration: identifiers.registration,
           survey: surveyId,
           duration: Date.now() - surveyStartTime,
           completion: true,

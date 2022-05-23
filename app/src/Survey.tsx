@@ -14,6 +14,7 @@ import {
     selectUiText,
     selectOptionStyle,
     selectDebugMode,
+    selectIdentifiers
 } from './features/config/configSlice';
 import { setAppView } from './features/ui/uiSlice';
 import {
@@ -37,7 +38,6 @@ import {
 } from './components/';
 import {
     Answers,
-    AnswerWrapper,
     CharacterWrapper,
     CheckAnswer,
     ContentWrapper,
@@ -66,9 +66,8 @@ const Survey = (props: any) => {
     const feedback = useAppSelector(selectFeedback);
     const uiText = useAppSelector(selectUiText);
     const promptComplete = useAppSelector(state => state.survey.promptComplete);
-    const userId = useAppSelector(state => state.config.userId);
-    const organization = useAppSelector(state => state.config.organization);
     const promptType = useAppSelector(state => state.playerProgress.promptType);
+    const identifiers = useAppSelector(selectIdentifiers);
 
     const [shouldLoadNextTask, setShouldLoadNextTask] = useState(false);
     const[taskAnswered, setTaskAnswered] = useState(false);
@@ -148,8 +147,10 @@ const Survey = (props: any) => {
         let score = 0;
         eService.logEvent('answered', {
           ...activeTask,
-          userId,
-          organization,
+          userId: identifiers.userId,
+          organizaiton: identifiers.organization,
+          agentName: identifiers.agentName,
+          registration: identifiers.registration,
           selectedOptionIndex,
           survey: surveyConfig.surveyId,
           duration: taskEndTime - taskStartTime

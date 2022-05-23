@@ -12,8 +12,9 @@ export default class EventService {
   logAgentProfileUpdatedEvent(e: any) {
     const agentProfile = {
       agent: {
+        name: e.agentName? e.agentName : "anonymous",
         account: {
-          homepage: e.organization? e.organization : 'curiouslearning',
+          homepage: e.organization? e.organization : 'https://literacytracker.org',
           name: e.uuid? e.uuid: 'anonymous'
         }
       },
@@ -26,7 +27,7 @@ export default class EventService {
 
   logAnsweredEvent(name: string, e: any) {
     var xAPIEvent = this.H5PDispatcher.createXAPIEventTemplate(name);
-    xAPIEvent.data.statement.actor = this.getActor(e.userId, e.organization);
+    xAPIEvent.data.statement.actor = this.getActor(e.userId, e.organization, e.agentName);
     xAPIEvent.data.statement.object['objectType'] = 'Activity';
     var definition = xAPIEvent.getVerifiedStatementValue(['object', 'definition']);
     // Clean html markup from the question
@@ -57,6 +58,7 @@ export default class EventService {
       duration: `PT${e.duration/1000}S`
     };
     xAPIEvent.data.statement['context'] = {
+      registration: e.registration,
       contextActivities: {
         parent: [{
           id: `https://data.curiouslearning.org/xAPI/activities/survey/${e.survey}`
@@ -71,7 +73,7 @@ export default class EventService {
 
   logSurveyObjectStatement(verb: string, e: any) {
     let xAPIEvent = this.H5PDispatcher.createXAPIEventTemplate(verb);
-    xAPIEvent.data.statement.actor = this.getActor(e.userId, e.organization);
+    xAPIEvent.data.statement.actor = this.getActor(e.userId, e.organization, e.agentName);
     xAPIEvent.data.statement.object['id'] = `https://data.curiouslearning.org/xAPI/activities/survey/${e.survey}`;
     xAPIEvent.data.statement.object['objectType'] = 'Activity';
     let definition = xAPIEvent.getVerifiedStatementValue(['object', 'definition']);
@@ -80,6 +82,9 @@ export default class EventService {
     xAPIEvent.data.statement['result'] = {
       completion: e.completion? e.completion: false,
       duration: e.duration ? `PT${e.duration/1000}S` : null
+    }
+    xAPIEvent.data['context'] = {
+      registration: e.registration
     }
     this.H5PDispatcher.trigger(xAPIEvent);
   }
@@ -103,15 +108,15 @@ export default class EventService {
     xAPIEvent.data.statement.timestamp = new Date(Date.now()).toISOString();
     this.H5PDispatcher.trigger(xAPIEvent);
   }
-
-  getActor(id: string, organization: string): models.IAgent {
+  getActor(id: string, organization: string, agentName: string): models.IAgent {
     return {
       objectType: "Agent",
-      ...this.getAgent(id, organization)
+      ...this.getAgent(id, organization, agentName)
     }
   }
-  getAgent(id:string, organization: string): models.IAgent {
+  getAgent(id:string, organization: string, agentName: string): models.IAgent {
       return {
+        name: agentName? agentName: 'anonymous',
         account: {
           homePage: organization? organization : 'curiouslearning',
           name: id?id:'anonymous'
