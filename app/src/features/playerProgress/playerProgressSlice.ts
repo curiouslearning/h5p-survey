@@ -1,22 +1,25 @@
 
 import { createSlice } from '@reduxjs/toolkit'
+import { IContentDef } from './utils';
 import {
   IRootState,
   ISurvey,
   ISurveyPreReqs,
-  SurveyType,
+  ContentType,
   PromptType
 } from '../models'
 
 interface ISurveyState {
-  currentIndex: SurveyType;
-  nextSurvey: SurveyType;
+  currentIndex: ContentType;
+  nextSurvey: ContentType;
+  nextContent: IContentDef[];
   promptType: PromptType;
 }
 
 const initialState: ISurveyState = {
-  currentIndex: SurveyType.None,
-  nextSurvey: SurveyType.None,
+  currentIndex: ContentType.None,
+  nextSurvey: ContentType.None,
+  nextContent: [],
   promptType: PromptType.Audio
 }
 
@@ -29,6 +32,7 @@ const playerProgressSlice = createSlice({
     }){
       state.currentIndex = action.payload.currentIndex;
       state.nextSurvey = action.payload.nextSurvey;
+      state.nextContent = action.payload.nextContent;
       state.promptType = action.payload.promptType;
     }
   }

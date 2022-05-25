@@ -6,6 +6,8 @@ import {
 
 import { ISurveyState, IRootState } from '../models';
 
+declare const H5P: any;
+
 const initialState: ISurveyState = {
     taskList: [],
     activeTask: null,

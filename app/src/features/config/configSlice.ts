@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { IRootState, SurveyType } from '../models'
+import { IRootState } from '../models'
 
 interface ConfigState {
     surveyId: string;
