@@ -1,17 +1,8 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-
 import Endscreen from './Endscreen';
-import Landing from './Landing';
-import Survey from './Survey';
-import { useAppDispatch, useAppSelector } from './hooks';
-import { SurveyType, PromptType} from './features/models';
-import {
-  loadQuestions,
-  selectSurveyState
-} from './features/survey/surveySlice';
 import { loadConfig } from './features/config/configSlice';
-import { selectAppView } from './features/ui/uiSlice';
+import { ContentType } from './features/models';
 import {
   loadProgressConfig
 } from './features/playerProgress/playerProgressSlice';
@@ -19,6 +10,15 @@ import {
   getNextSurveyIndex,
   getPromptType
 } from './features/playerProgress/utils';
+import {
+  loadQuestions,
+  selectSurveyState
+} from './features/survey/surveySlice';
+import { selectAppView } from './features/ui/uiSlice';
+import { useAppDispatch, useAppSelector } from './hooks';
+import Landing from './Landing';
+import Survey from './Survey';
+
 
 const Wrapper = styled.div`
     min-height: 100%;
@@ -35,6 +35,8 @@ const App = (props: any) => {
     const surveyState = useAppSelector(selectSurveyState);
     const dispatch = useAppDispatch();
 
+    const { endGame} = props.config
+    const contentType = ContentType.NonLiterateSes
     useEffect(() => {
       const handleMultiTouch = (e: any): void => {
         if (e.touches.length > 1) {
@@ -50,10 +52,6 @@ const App = (props: any) => {
     }, [])
 
     useEffect(() => {
-      if(props.config.surveyType) {
-        const typeInt = parseInt(props.config.surveyType);
-        props.config.surveyType = typeInt;
-      }
         dispatch(loadConfig({
             config: props.config,
             contentId: props.contentId,
@@ -63,10 +61,12 @@ const App = (props: any) => {
           contentId: props.contentId
         }));
         dispatch(loadProgressConfig({
-          currentIndex: SurveyType.None,
-          nextSurvey: getNextSurveyIndex(SurveyType.None),
-          promptType: getPromptType(PromptType.Visual)
+          currentIndex: contentType,
+          nextContent: endGame.nextContent,
+          promptType: getPromptType(contentType, endGame.nextContent),
+          nextSurvey: getNextSurveyIndex(contentType, endGame.nextContent)
         }));
+
     }, [])
 
     useEffect(() => {

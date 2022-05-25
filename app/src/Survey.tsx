@@ -26,7 +26,7 @@ import {
     selectSurveyState,
     selectSurveyIsCompleted,
 } from './features/survey/surveySlice';
-import { SurveyType, PromptType, ITask, ITarget } from './features/models';
+import { ContentType, PromptType, ITask, ITarget } from './features/models';
 import {
     AudioPlayer,
     Button,

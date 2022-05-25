@@ -1,35 +1,34 @@
 import { useAppSelector } from '../../hooks';
 import {
-  ISurvey,
   ISurveyPreReqs,
-  SurveyType,
-  ISurveyState,
+  ContentType,
   PromptType
 } from '../models'
-import preReqs from './preReqs.json'
 
 
+export interface IContentDef
+{
+  id: ContentType;
+  reqs: ISurveyPreReqs;
+  promptType: PromptType,
+  nextContent: ContentType,
+  url: string;
+}
 const ERR404 = "http://curiousreader.org/404";
-console.log(preReqs);
 
-function findReqObj (index: SurveyType): ISurvey {
-  const reqObj = preReqs.find((req: ISurvey) => {
-    const parsedId = parseInt(req.id.toString());
-    const parsedIndex = parseInt(index);
-    console.log(`comparing ${parsedId} to ${parsedIndex}`);
-    if (parsedId === parsedIndex) {
+function findReqObj (index: ContentType, contentList: Array<IContentDef>): IContentDef {
+  const reqObj = contentList.find((req: IContentDef) => {
+    console.log(`comparing ${index} to ${req.id}`)
+    if (index as ContentType === req.id) {
       return req;
     }
   });
   return reqObj;
 }
 
-export function getPromptType(index: SurveyType): PromptType {
-  if(preReqs) {
-    const reqObj = findReqObj(index);
+export function getPromptType(index: ContentType, contentList: Array<IContentDef>): PromptType {
+    const reqObj = findReqObj(index, contentList);
     return reqObj ? reqObj.promptType : PromptType.Audio;
-  }
-  return PromptType.Audio;
 }
 
 export function createRequirementsObject(): ISurveyPreReqs {
@@ -38,39 +37,32 @@ export function createRequirementsObject(): ISurveyPreReqs {
   }
   return preReqs
 }
-export function loadPreReqs(index: SurveyType): ISurveyPreReqs {
-  if(preReqs) {
-    const reqObj = findReqObj(index);
-    return reqObj ? reqObj.reqs : {};
-  }
-  return {};
+export function loadPreReqs(index: ContentType, contentList: Array<IContentDef>): ISurveyPreReqs {
+  const reqObj = findReqObj(index, contentList);
+  return reqObj ? reqObj.reqs : {};
 }
 
 export function getNextSurveyIndex(
-  index: number
-): SurveyType {
-  if (preReqs) {
-    const current = findReqObj(index);
-    if (current && current.nextSurvey) {
-      return current.nextSurvey;
-    }
-  }
-  return SurveyType.None;
+  index: ContentType,
+ contentList: Array<IContentDef>
+): ContentType {
+      const current = findReqObj(index, contentList);
+      if (current && current.nextContent) {
+        return current.nextContent;
+      }
+  return ContentType.None;
 }
 
-export function getSurveyURL(index: SurveyType): string {
-  if (preReqs) {
-    const reqObj = findReqObj(index);
-    return reqObj ? reqObj.url : ERR404;
-  }
-  return ERR404;
+export function getSurveyURL(index: ContentType, contentList: Array<IContentDef>): string {
+  const reqObj = findReqObj(index, contentList);
+  return reqObj ? reqObj.url : ERR404;
 }
 export function satisfiesPreReqs(
   state: ISurveyPreReqs,
-  index: SurveyType
+  index: ContentType,
+  contentList: Array<IContentDef>
 ): boolean {
-  if (preReqs) {
-    const reqObj = findReqObj(index);
+    const reqObj = findReqObj(index, contentList);
     for (const req in Object.keys(reqObj.reqs)) {
       const target = reqObj.reqs[req];
       const result = state[req]
@@ -78,7 +70,5 @@ export function satisfiesPreReqs(
         return false
       }
     }
-  }
-
   return true;
 }

@@ -134,6 +134,7 @@ export default class EventService {
         break;
       case 'registered':
         this.logRegisteredStatement(e.actor, e);
+        break;
       case 'terminated':
         this.logSurveyObjectStatement(name, e);
         break;

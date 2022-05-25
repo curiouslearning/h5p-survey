@@ -375,6 +375,130 @@
             }
           }
         ]
+      },
+      {
+        "name":"nextContent",
+        "description":"a list of next content in the chain and their prerequisites",
+        "type": "list",
+        "field": {
+          "name": "content",
+          "type": "group",
+          "label": "content",
+          "fields": [
+            {
+              "name": "id",
+              "type": "select",
+              "label": "Content Type",
+              "description": "The literacy domain this content is focused on",
+              "options": [
+                {
+                  "label": "Other",
+                  "value": "None"
+                },
+                {
+                  "label": "Oral Vocabulary",
+                  "value": "OralVocab"
+                },
+                {
+                  "label": "Letter-Sound Matching",
+                  "value": "LetterSound"
+                },
+                {
+                  "label": "Reading Vocabulary",
+                  "value": "ReadingVocab"
+                },
+                {
+                  "label": "Sight Word Recognition",
+                  "value": "SightWords"
+                },
+                {
+                  "label": "Pseudoword Recognition",
+                  "value": "Pseudowords"
+                }, 
+                {
+                  "label": "Nonliterate SES",
+                  "value": "NonLiterateSes"
+                }
+              ]
+            },
+            {
+              "name": "reqs",
+              "label": "Prerequisites",
+              "optional": true,
+              "type": "group",
+              "fields": [
+                {
+                  "name": "score",
+                  "label": "Minimum Score",
+                  "type": "number",
+                  "default": 0,
+                  "max": 100
+                }
+              ]
+            },
+            {
+              "name": "promptType",
+              "label": "Prompt Type",
+              "description": "What kind of prompt does this content use?",
+              "type": "select",
+              "options": [
+                {
+                  "label": "Audio",
+                  "value": "AUDIO"
+                },
+                {
+                  "label": "Visual",
+                  "value": "VISUAL"
+                }
+              ]
+            },
+            {
+              "name": "nextContent",
+              "label": "Next content",
+              "description": "The content to redirect to upon completion of this content",
+              "type": "select",
+              "options": [
+                {
+                  "label": "Other",
+                  "value": "None"
+                },
+                {
+                  "label": "Oral Vocabulary",
+                  "value": "OralVocab"
+                },
+                {
+                  "label": "Letter-Sound Matching",
+                  "value": "LetterSound"
+                },
+                {
+                  "label": "Reading Vocabulary",
+                  "value": "ReadingVocab"
+                },
+                {
+                  "label": "Sight Word Recognition",
+                  "value": "SightWords"
+                },
+                {
+                  "label": "Pseudoword Recognition",
+                  "value": "Pseudowords"
+                }, 
+                {
+                  "label": "Nonliterate SES",
+                  "value": "NonLiterateSes"
+                }
+              ]
+            },
+            {
+              "name": "url",
+              "label": "URL",
+              "description": "The URL of this content",
+              "type": "text",
+              "default": "",
+              "optional": false
+            }
+          ]
+
+        }
       }
     ]
   }

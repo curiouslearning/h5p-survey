@@ -10,9 +10,14 @@ export interface ITarget {
     audioFile: [any];
 }
 
-export enum SurveyType {
-  None = 1,
-  NonLiterateSes = 2
+export enum ContentType {
+  None = "None",
+  OralVocab = "OralVocab",
+  LetterSound = "LetterSound",
+  ReadingVocab = "ReadingVocab",
+  SightWords = "SightWords",
+  Pseudowords = "Pseudowords",
+  NonLiterateSes = "NonLiterateSes"
 }
 
 export enum PromptType {
@@ -21,10 +26,10 @@ export enum PromptType {
 }
 
 export interface ISurvey {
-  id: SurveyType;
+  id: ContentType;
   promptType: PromptType;
   reqs: ISurveyPreReqs;
-  nextSurvey: SurveyType;
+  nextSurvey: ContentType;
   url: string;
 }
 

@@ -9,7 +9,7 @@ const H5PDispatcher = new H5P.EventDispatcher();
 
 import { LinkButton, Button, Pirate, Scorebar } from './components';
 import { Eye, Retry, Close } from './icons';
-import { SurveyType } from './features/models';
+import { ContentType } from './features/models';
 import { useAppDispatch, useAppSelector } from './hooks';
 import {
   loadPreReqs,
@@ -83,6 +83,7 @@ const Endscreen = (props: any) => {
     const [linkActive, setLinkActive] = useState(false);
     const currentSurvey = useAppSelector((state) => state.playerProgress.currentIndex);
     const nextSurvey = useAppSelector((state) => state.playerProgress.nextSurvey);
+    const nextContent = useAppSelector((state) => state.playerProgress.nextContent);
 
     const restartSurvey = () => {
         dispatch(resetSurvey());
@@ -107,21 +108,21 @@ const Endscreen = (props: any) => {
     const handleClose = () => {
       console.log('closing');
       try {
-        if (nextSurvey !== SurveyType.None) {
+        if (nextSurvey !== ContentType.None) {
           const result = createRequirementsObject();
-          if (satisfiesPreReqs(result, nextSurvey)) {
-            let url = getSurveyURL(nextSurvey);
+          if (satisfiesPreReqs(result, nextSurvey, nextContent)) {
+            let url = getSurveyURL(nextSurvey, nextContent);
             let params = window.location.search;
             url += params;
             window.top.location = url;
           } else if(!isWebview) {
-            window.top.location = getSurveyURL(SurveyType.None);
+            window.top.location = getSurveyURL(ContentType.None, nextContent);
           } else {
             Unity.call('close');
           }
         }
         else if (!isWebview) {
-          window.top.location = getSurveyURL(SurveyType.None);
+          window.top.location = getSurveyURL(ContentType.None, nextContent);
         }
         else {
           Unity.call('close');
