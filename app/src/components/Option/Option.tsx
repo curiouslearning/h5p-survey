@@ -1,8 +1,8 @@
 declare var H5P: any;
-declare var Unity: any;
+// declare var Unity: any;
 
 H5P = H5P || {};
-Unity = Unity || {};
+// Unity = Unity || {};
 
 import React from 'react';
 import styled, { css } from 'styled-components';
@@ -15,7 +15,7 @@ interface IOptionStyled {
 
 const Wrapper = styled('li')<IOptionStyled>`
     flex-basis: calc(50% - 10px);
-    height: 78px;
+    max-height: 78px;
     box-sizing: border-box;
     display: inline-flex;
     align-items: center;

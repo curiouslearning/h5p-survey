@@ -35,7 +35,7 @@ module.exports = {
   },
   output: {
     filename: 'main.js',
-    path: path.resolve(__dirname, '../H5P.Survey/'),
+    path: path.resolve(__dirname, './H5P.Survey/'),
   },
   plugins: [
     new CopyPlugin({
@@ -46,27 +46,27 @@ module.exports = {
         },
         {
           from: 'H5P.Survey',
-          to: './dev/repos/h5p-survey'
+          to: '../dev/repos/h5p-survey'
         },
         {
           from: 'H5PEditor.RangeList',
-          to: './dev/repos/h5p-editor-range-list'
+          to: '../dev/repos/h5p-editor-range-list'
         },
         {
           from: 'H5PEditor.ShowWhen',
-          to: './dev/repos/h5p-editor-show-when'
+          to: '../dev/repos/h5p-editor-show-when'
         },
         {
           from: 'H5PEditor.TableList',
-          to: './dev/repos/h5p-editor-table-list'
+          to: '../dev/repos/h5p-editor-table-list'
         },
         {
           from: 'app/content/**.json',
-          to: './dev/repos/h5p-survey/content/[name][ext]'
+          to: '../dev/repos/h5p-survey/content/[name][ext]'
         },
         {
           from: 'app/content/audio/*.wav',
-          to:  './dev/repos/h5p-survey/content/audio/[name][ext]'
+          to:  '../dev/repos/h5p-survey/content/audio/[name][ext]'
         }
       ]
     })

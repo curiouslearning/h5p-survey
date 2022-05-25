@@ -1,8 +1,8 @@
 declare var H5P: any;
-declare var Unity: any;
+// declare var Unity: any;
 
 H5P = H5P || {};
-Unity = Unity || {};
+// Unity = Unity || {};
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useAppSelector, useAppDispatch } from '../../hooks'
@@ -13,6 +13,8 @@ import { AudioPlay, SoundWaves } from '../../icons';
 import {
   setPromptStatus
 } from '../../features/survey/surveySlice'
+import EventService from '../../features/xAPI/eventService';
+import { selectIdentifiers } from '../../features/config/configSlice';
 
 interface IAudioPlayer {
     audio: string;
@@ -61,6 +63,7 @@ const AudioPlayer = (props: IAudioPlayer) => {
     const [playing, setPlaying] = useState(false);
     const isWebview = useAppSelector(state => state.config.isWebview);
     const taskAnswered = useAppSelector(state => state.survey.taskAnswered);
+    const identifiers = useAppSelector(selectIdentifiers);
 
     const playAudio = () => {
         var playPromise = audioRef.current.play();
@@ -88,6 +91,15 @@ const AudioPlayer = (props: IAudioPlayer) => {
       console.log('uh-oh');
       if( isWebview ) {
         try {
+          const eService = new EventService();
+          eService.logEvent('terminated', {
+            userId: identifiers.userId,
+            organization: identifiers.organization,
+            agentName: identifiers.agentName,
+            registration: identifiers.registration,
+            success: false,
+            completion: false
+          })
           Unity.call('FatalError');
         } catch (err) {
           console.error(err);

@@ -12,12 +12,13 @@ const Wrapper = styled('div')<IOptionStyled>`
     flex-basis: auto;
     height: 20px;
     box-sizing: border-box;
+    text-align: center;
     align-items: center;
     justify-content: center;
     font-weight: 700;
     font-size: 20px;
     flex-shrink: 0;
-
+    max-width: 270px
 `
 
 const TextDisplay = (props: any) => {

@@ -5,8 +5,11 @@ import Endscreen from './Endscreen';
 import Landing from './Landing';
 import Survey from './Survey';
 import { useAppDispatch, useAppSelector } from './hooks';
-import { SurveyType } from './features/models';
-import { selectSurveyState } from './features/survey/surveySlice';
+import { SurveyType, PromptType} from './features/models';
+import {
+  loadQuestions,
+  selectSurveyState
+} from './features/survey/surveySlice';
 import { loadConfig } from './features/config/configSlice';
 import { selectAppView } from './features/ui/uiSlice';
 import {
@@ -32,6 +35,19 @@ const App = (props: any) => {
     const surveyState = useAppSelector(selectSurveyState);
     const dispatch = useAppDispatch();
 
+    useEffect(() => {
+      const handleMultiTouch = (e: any): void => {
+        if (e.touches.length > 1) {
+          e.preventDefault();
+        }
+      }
+      document.addEventListener('touchmove', handleMultiTouch, {
+        passive: false
+      });
+      return () => {
+        document.removeEventListener('touchmove', handleMultiTouch);
+      }
+    }, [])
 
     useEffect(() => {
       if(props.config.surveyType) {
@@ -42,11 +58,14 @@ const App = (props: any) => {
             config: props.config,
             contentId: props.contentId,
         }));
-
+        dispatch(loadQuestions({
+          questions: props.config.questions,
+          contentId: props.contentId
+        }));
         dispatch(loadProgressConfig({
-          currentIndex: props.config.surveyType,
-          nextSurvey: getNextSurveyIndex(props.config.surveyType),
-          promptType: getPromptType(props.config.surveyType)
+          currentIndex: SurveyType.None,
+          nextSurvey: getNextSurveyIndex(SurveyType.None),
+          promptType: getPromptType(PromptType.Visual)
         }));
     }, [])
 

@@ -7,49 +7,6 @@
     "optional": false
   },
   {
-    "name": "surveyType",
-    "type": "select",
-    "label": "Survey Type",
-    "description": "The literacy domain this survey is focused on",
-    "options": [
-      {
-        "label": "Other",
-        "value": 1
-      },
-      {
-        "label": "Oral Vocab",
-        "value": 2
-      },
-      {
-        "label": "Letter-Sound Matching",
-        "value": 3
-      },
-      {
-        "label": "Reading Vocab",
-        "value": 4
-      },
-      {
-        "label": "Sight Word Recognition",
-        "value": 5
-      },
-      {
-        "label": "Pseudoword Recognition",
-        "value": 6
-      }
-    ]
-  },
-  {
-    "name": "passPercentage",
-    "type": "number",
-    "label": "Pass percentage",
-    "importance": "low",
-    "description": "Percentage of Total score required for passing the quiz.",
-    "min": 0,
-    "max": 100,
-    "step": 1,
-    "default": 50
-  },
-  {
     "name": "optionStyle",
     "label": "Option style",
     "description": "How to display the answer options. Default is grid",
@@ -89,13 +46,6 @@
     "default": "b6268727178610"
   },
   {
-    "name": "autoScore",
-    "type": "boolean",
-    "label": "Auto score task on click",
-    "optional": true,
-    "default": true
-  },
-  {
     "name": "autoProgression",
     "type": "group",
     "label": "Auto progression",
@@ -118,18 +68,83 @@
     ]
   },
   {
-    "name": "testAllInBasalCeiling",
-    "type": "boolean",
-    "label": "Test all items in basal and ceiling",
-    "description": "Check if the survey should test all items in basal and ceiling bucket before ending survey.",
-    "default": false
-  },
-  {
     "name": "debugMode",
     "label": "Show debug mode",
     "description": "Will display debug mode for the binary search. Hides the characters and animations to make space for debug.",
     "type": "boolean",
     "default": false
+  },
+  {
+    "name": "feedback",
+    "type": "group",
+    "label": "Survey Response Feedback",
+    "importance": "medium",
+    "fields": [
+      {
+        "name": "feedbackText",
+        "type": "text",
+        "widget": "html",
+        "default": "Thank you! 🎉",
+        "label": "Submission feedback text",
+        "tags": [
+          "em", "strong"
+        ],
+        "font": [
+        ]
+      },
+      {
+        "name": "feedbackAudio",
+        "type": "audio",
+        "label": "Submission feedback audio file",
+        "description": "Audio to be played when a user answers a question",
+        "optional": true
+      },
+      {
+        "name": "feedbackAnimation",
+        "type": "select",
+        "label": "Feedback animation",
+        "description": "Animation to be played after submission. (Random is default)",
+        "default": "pirate-random",
+        "options": [
+          {
+            "value": "pirate-random",
+            "label": "Pirate Random animation"
+          },
+          {
+            "value": "pirate-jump-clap",
+            "label": "Pirate Jumping and clapping"
+          },
+          {
+            "value": "pirate-jump",
+            "label": "Pirate Jumping version 1"
+          },
+          {
+            "value": "pirate-jump-v2",
+            "label": "Pirate Jumping version 2"
+          },
+          {
+            "value": "pirate-thumbsup",
+            "label": "Pirate Thumbs up"
+          },
+          {
+            "value": "lemur-random",
+            "label": "Lemur Random animation"
+          },
+          {
+            "value": "lemur-jump",
+            "label": "Lemur Jumping"
+          },
+          {
+            "value": "lemur-jump-clap",
+            "label": "Lemur Jumping and Clapping"
+          },
+          {
+            "value": "lemur-thumbsup",
+            "label": "Lemur Thumbs Up"
+          }
+        ]
+      }
+    ]
   },
   {
     "name": "uiText",
@@ -189,72 +204,52 @@
     ]
   },
   {
-    "name": "buckets",
-    "label": "Buckets",
+    "name": "questions",
+    "label": "Questions",
     "importance": "high",
     "type": "list",
     "min": 1,
-    "entity": "bucket",
+    "entity": "question",
     "field": {
-      "name": "bucket",
+      "name": "question",
       "type": "group",
-      "label": "Bucket",
+      "label": "Question",
       "expanded": false,
       "fields": [
         {
-          "name": "bucketName",
-          "label": "Bucket name",
+          "name": "questionName",
+          "label": "Question name",
           "type": "text"
         },
         {
-          "name": "level",
-          "label": "Bucket level",
-          "type": "number"
-        },
-        {
-          "name": "displayText",
-          "label": "Display Prompt Text",
-          "description": "Display Prompt Text below audio",
-          "type": "boolean",
-          "default": false
-        },
-        {
-          "name": "promptText",
-          "label": "Prompt Text",
-          "description": "Prompt Text to accompany each task in bucket",
+          "name": "prompt",
+          "label": "Question Text",
+          "description": "Text of the question asked",
           "type": "text",
-          "default": ""
+          "default": "write your question here",
+          "optional": false
         },
         {
-          "name": "arrayLength",
-          "label": "Choices Length",
-          "description": "how many choices to display per question",
-          "type": "select",
-          "default": 4,
-          "options": [
-            {
-              "label": "4",
-              "value": 4
-            },
-            {
-              "label": "6",
-              "value": 6
-            }
-          ]
+          "name": "audioFile",
+          "label": "Question Audio",
+          "description": "Audio of the question asked",
+          "type": "audio",
+          "optional": false
         },
         {
-          "name": "targets",
+          "name": "items",
           "type": "list",
           "importance": "high",
-          "label": "Available targets and foils",
-          "entity": "target",
-          "min": 5,
-          "defaultNum": 5,
+          "label": "Answer Grid",
+          "entity": "item",
+          "min": 2,
+          "max": 6,
+          "defaultNum": 6,
           "expanded": false,
           "field": {
-            "name": "target",
+            "name": "item",
             "type": "group",
-            "label": "Target",
+            "label": "Response Item",
             "importance": "high",
             "expanded": false,
             "fields": [
@@ -263,7 +258,7 @@
                 "type": "text",
                 "importance": "medium",
                 "widget": "html",
-                "label": "Text",
+                "label": "Selection Text",
                 "optional": true,
                 "tags": [
                   "strong",
@@ -288,81 +283,6 @@
               }
             ]
           }
-        },
-        {
-          "name": "successfulTextFeedback",
-          "type": "text",
-          "widget": "html",
-          "default": "Great job! 🎉",
-          "label": "Successful answer feedback",
-          "tags": [
-            "em", "strong"
-          ],
-          "font": [
-          ]
-        },
-        {
-          "name": "successfulAudio",
-          "type": "audio",
-          "label": "Successful response audio file",
-          "description": "Audio to be played when an answer is correct",
-          "optional": true
-        },
-        {
-          "name": "wrongTextFeedback",
-          "type": "text",
-          "widget": "html",
-          "label": "Wrong answer feedback",
-          "default": "Wrong answer",
-          "tags": [
-            "em", "strong"
-          ],
-          "font": []
-        },
-        {
-          "name": "successAnimation",
-          "type": "select",
-          "label": "Success animation",
-          "description": "Animation to be played if answered correct. (Random is default)",
-          "default": "pirate-random",
-          "options": [
-            {
-              "value": "pirate-random",
-              "label": "Pirate Random animation"
-            },
-            {
-              "value": "pirate-jump-clap",
-              "label": "Pirate Jumping and clapping"
-            },
-            {
-              "value": "pirate-jump",
-              "label": "Pirate Jumping version 1"
-            },
-            {
-              "value": "pirate-jump-v2",
-              "label": "Pirate Jumping version 2"
-            },
-            {
-              "value": "pirate-thumbsup",
-              "label": "Pirate Thumbs up"
-            },
-            {
-              "value": "lemur-random",
-              "label": "Lemur Random animation"
-            },
-            {
-              "value": "lemur-jump",
-              "label": "Lemur Jumping"
-            },
-            {
-              "value": "lemur-jump-clap",
-              "label": "Lemur Jumping and Clapping"
-            },
-            {
-              "value": "lemur-thumbsup",
-              "label": "Lemur Thumbs Up"
-            }
-          ]
         }
       ]
     }
@@ -373,18 +293,6 @@
     "label": "Survey finished",
     "importance": "medium",
     "fields": [
-      {
-        "name": "showSolutionButton",
-        "type": "boolean",
-        "label": "Display solution button",
-        "default": false
-      },
-      {
-        "name": "showRetryButton",
-        "type": "boolean",
-        "label": "Display retry button",
-        "default": false
-      },
       {
         "name": "showCloseButton",
         "type":  "boolean",
@@ -401,8 +309,8 @@
           {
             "name": "successType",
             "type": "select",
-            "label": "Select type of feedback for successful quiz",
-            "description": "What type of feedback should be shown if quiz is successful",
+            "label": "Select type of feedback for successful survey",
+            "description": "What type of feedback should be shown on completion",
             "importance": "low",
             "optional": true,
             "options": [
@@ -462,81 +370,6 @@
                 {
                   "field": "successType",
                   "equals": [ "successUrl" ]
-                }
-              ]
-            }
-          }
-        ]
-      },
-      {
-        "name": "failFeedback",
-        "type": "group",
-        "label": "Fail Feedback",
-        "importance": "low",
-        "expanded": true,
-        "fields": [
-          {
-            "name": "failType",
-            "type": "select",
-            "label": "Select type of feedback for a failed quiz",
-            "description": "What type of feedback should be shown if quiz is failed",
-            "importance": "low",
-            "optional": true,
-            "options": [
-              {
-                "value": "failVideo",
-                "label": "Video"
-              },
-              {
-                "value": "failUrl",
-                "label": "URL"
-              }
-            ]
-          },
-          {
-            "name": "failVideo",
-            "type": "video",
-            "label": "Fail video",
-            "importance": "low",
-            "optional": true,
-            "description": "This video will be played if the user fails the quiz.",
-            "widget": "showWhen",
-            "showWhen": {
-              "detach": true,
-              "rules": [
-                {
-                  "field": "failType",
-                  "equals": [ "failVideo" ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "failUrl",
-            "type": "group",
-            "fields": [
-              {
-                "name": "url",
-                "label": "Url",
-                "type": "text"
-              },
-              {
-                "name": "linkLabel",
-                "label": "Label",
-                "type": "text"
-              }
-            ],
-            "label": "Fail URL",
-            "importance": "low",
-            "optional": true,
-            "description": "This URL will be shown as a link after a quiz has failed",
-            "widget": "showWhen",
-            "showWhen": {
-              "detach": true,
-              "rules": [
-                {
-                  "field": "failType",
-                  "equals": [ "failUrl" ]
                 }
               ]
             }

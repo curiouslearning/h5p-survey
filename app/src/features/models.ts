@@ -33,6 +33,7 @@ export interface ISurveyPreReqs {
 }
 
 export interface ISurveyState {
+    taskList: Array<ITask>;
     activeTask: ITask;
     activeTaskIndex: number;
     startTime: number;
@@ -42,7 +43,6 @@ export interface ISurveyState {
     surveyActive: boolean;
     surveyIsCompleted: boolean;
     taskAnswered: boolean;
-    shouldLoadNextTask: boolean;
     userId: string;
 }
 

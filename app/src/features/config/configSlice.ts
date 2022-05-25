@@ -6,9 +6,9 @@ interface ConfigState {
     contentId: string;
     userId: string;
     organization: string;
+    agentName: string;
     passPercentage?: number;
     uiText: {
-      feedbackText: string;
       resultText: string;
       solutionButtonText: string;
       retryButtonText: string;
@@ -22,8 +22,11 @@ interface ConfigState {
       enabled: boolean;
       delayTime: number;
     };
-    feedbackAnimation: string;
-    feedbackAudioPath: string;
+    feedback: {
+      feedbackText: string;
+      feedbackAnimation: string;
+      feedbackAudio: any;
+    }
     endGame?: {
         successFeedback: any;
         failFeedback: any;
@@ -41,6 +44,7 @@ const initialState:ConfigState = {
     contentId: '',
     userId: 'anonymous',
     organization: 'curiouslearning',
+    agentName: "anonymous",
     uiText: {
       feedbackText: '',
       resultText: '',
@@ -51,8 +55,11 @@ const initialState:ConfigState = {
       continueButtonText: '',
       checkAnswerText: ''
     },
-    feedbackAnimation: '',
-    feedbackAudioPath: '',
+    feedback: {
+      feedbackText: '',
+      feedbackAnimation: '',
+      feedbackAudio: [],
+    },
     isWebview: false,
     autoProgression: {
         enabled: false,
@@ -83,13 +90,17 @@ const configSlice = createSlice({
         payload: {
           userId: string;
           organization: string;
+          agentName: string;
+          registration: string;
         }
       }) {
         console.log(`uuid: ${action.payload}`);
         return {
           ...state,
           userId: action.payload.userId,
-          organization: action.payload.organization
+          organization: action.payload.organization,
+          agentName: action.payload.agentName,
+          registration: action.payload.registration
         }
       },
       setIsWebview(state: ConfigState, action: {
@@ -113,13 +124,22 @@ export const selectOptionStyle = (state: IRootState) => state.config.optionStyle
 export const selectUiText = (state: IRootState) => state.config.uiText;
 export const selectIsWebView = ( state: IRootState ) => state.config.isWebview;
 export const selectUserId = ( state: IRootState ) => state.config.userId;
+export const selectFeedback = ( state: IRootState ) => state.config.feedback;
+export const selectIdentifiers = ( state: IRootState ) => {
+  const {userId, organization, agentName, registration} = state.config;
+  return {
+    userId,
+    organization,
+    agentName,
+    registration
+  };
+}
 export const selectSurveyConfig = (state: IRootState) => {
-    const { surveyId, feedbackAudioPath, feedbackAnimation, autoProgression, uiText, contentId, userId, mixedCaseFriendlyFont, testAllInBasalCeiling } = state.config;
+    const { surveyId, feedback, autoProgression, uiText, contentId, userId, mixedCaseFriendlyFont, testAllInBasalCeiling } = state.config;
     return {
         surveyId,
         uiText,
-        feedbackAnimation,
-        feedbackAudioPath,
+        feedback,
         autoProgression,
         contentId,
         userId,

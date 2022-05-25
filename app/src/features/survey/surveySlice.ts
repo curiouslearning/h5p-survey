@@ -7,13 +7,13 @@ import {
 import { ISurveyState, IRootState } from '../models';
 
 const initialState: ISurveyState = {
+    taskList: [],
     activeTask: null,
     activeTaskIndex: -1,
     promptComplete: false,
     surveyActive: false,
     surveyIsCompleted: false,
     taskAnswered: false,
-    shouldLoadNextTask: false,
     startTime: Date.now(),
     endTime: 0,
     duration: 0,
@@ -27,15 +27,48 @@ const surveySlice = createSlice({
         setPromptStatus(state: ISurveyState, action: {payload: boolean}) {
           state.promptComplete = action.payload;
         },
-        initSurvey(state: ISurveyState, action: {payload: any}) {
-
+        loadQuestions(
+          state: ISurveyState,
+          action: {
+            payload: {
+              questions: any,
+              contentId: string
+            }
+          }) {
+          const contentId = action.payload.contentId;
+          state.taskList = action.payload.questions.map((question: any) => {
+            const promptAudio= question.audioFile? question.audioFile[0].path : '';
+            return {
+              items: question.items.map((choice: any) => {
+                const imagePath = choice.image? choice.image.path : null;
+                return {
+                  text: choice.text,
+                  image: imagePath ? H5P.getPath(imagePath, contentId) : null
+                }
+              }),
+              text: question.prompt,
+              audioFile: H5P.getPath(promptAudio, contentId)
+            };
+          })
         },
+        initSurvey(state: ISurveyState, action: {payload: any}) {
+          return {
+            ...state,
+            ...action.payload
+          }
+        },
+
         loadNextTask(state: ISurveyState):void {
-            state.shouldLoadNextTask = true;
-            // state.activeTaskIndex = state.activeTaskIndex + 1;
+            state.activeTaskIndex++;
+            if (state.activeTaskIndex < state.taskList.length) {
+              state.activeTask = state.taskList[state.activeTaskIndex];
+            } else {
+              state.surveyIsCompleted = true;
+            }
         },
 
         setSurveyCompleted(state: ISurveyState):void {
+          state.surveyIsCompleted = true;
           state.endTime = Date.now();
         },
 
@@ -60,6 +93,7 @@ const surveySlice = createSlice({
 
 export const {
     setPromptStatus,
+    loadQuestions,
     initSurvey,
     loadNextTask,
     resetSurvey,
@@ -93,6 +127,5 @@ export const selectTestStartTime = (state: IRootState) => state.survey.startTime
 export const selectTestEndTime = (state: IRootState) => state.survey.endTime;
 // Selector for retreiving the score and max score for the survey
 
-export const selectShouldLoadNextTask = (state: IRootState) => state.survey.shouldLoadNextTask
 
 export default surveySlice.reducer

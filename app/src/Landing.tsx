@@ -1,9 +1,9 @@
 declare var H5P: any;
-declare var Unity: any;
 
 H5P = H5P || {};
-Unity = Unity || {};
 
+import {v4 as uuidv4} from 'uuid';
+import Cookies from 'universal-cookie';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useAppDispatch, useAppSelector } from './hooks';
@@ -16,7 +16,7 @@ import {
   getNextSurveyIndex
 } from './features/playerProgress/utils';
 import {
-    initSurvey,
+    loadNextTask,
     // Selectors
 } from './features/survey/surveySlice';
 import {
@@ -78,32 +78,55 @@ const Landing = () => {
 
 
     const initializeAgentMetadata = (utmParams: any) => {
-      fetch(`https://ipinfo.io/json?token=${ipToken}`)
-      .then((response) => {
-          if(!response.ok) {
-            throw Error(response.statusText);
-          }
-        return response.json()
-      }).then((jsonResponse)  => {
-        let loc;
-        if(jsonResponse) {
-          loc = {
-            city: jsonResponse.city,
-            region: jsonResponse.region,
-            country: jsonResponse.country,
-            lat: jsonResponse.lat,
-            lng: jsonResponse.lng
-          };
+      const cookies = new Cookies();
+      const response = await fetch(`https://ipinfo.io/json?token=${ipToken}`)
+      if(!response.ok) {
+        console.error(`agent profile failed to update! encountered error ${response.statusText}`);
+      }
+      let location = {};
+      let agentName = ""
+      let registration ="";
+      const jsonResponse = await response.json()
+      if(jsonResponse) {
+        const id = uuidv4();
+        let setVal = cookies.get('uuid');
+        if (!setVal) {
+          cookies.set('uuid', id, {path: '/'});
+          setVal = id;
         }
-        eService.logEvent('agentProfileUpdated', {
-          ...utmParams,
-          ...loc
-        });
-        return;
-      }).catch((err) => {
-        console.error(`agent profile failed to update! encountered error ${err.msg}`);
+        agentName = setVal
+        registration = id;
+        location = {
+          city: jsonResponse.city,
+          region: jsonResponse.region,
+          country: jsonResponse.country,
+          lat: jsonResponse.loc.split(',')[0],
+          lng: jsonResponse.loc.split(',')[1]
+        };
+      }
+
+      dispatch(setUser({
+        userId: utmParams.uuid? utmParams.uuid: agentName,
+        organization: utmParams.uuid? utmParams.organization : "https://literacytracker.org",
+        agentName,
+        registration
+      }));
+
+      eService.logEvent('agentProfileUpdated', {
+        ...utmParams,
+        ...location,
+        uuid: utmParams.uuid? utmParams.uuid : agentName,
+        organization: utmParams.uuid? utmParams.uuid: "https://literacytracker.org",
+        agentName,
       });
-    }
+      eService.logEvent('initialized', {
+        userId: utmParams.uuid? utmParams.uuid : agentName,
+        organization: utmParams.uuid? utmParams.organization : "https://literacytracker.org",
+        survey: surveyConfig.surveyId,
+        registration,
+        agentName
+      });
+
     useEffect(() => {
       window.dispatchEvent(new Event('resize'));
     }, [])
@@ -119,8 +142,8 @@ const Landing = () => {
         actions.style.visibility = "hidden";
         Unity.call('loaded');
       } catch(e) {
-        if(e.msg !== 'Unity is not defined') {
-          throw e;
+        if(e.message !== 'Unity is not defined') {
+          console.warn(e.message);
         }
 
       }
@@ -134,23 +157,12 @@ const Landing = () => {
             </ThreeMonstersWrapper>
             <StartWrapper>
                 <Button onClick={() => {
-                    if(utmParams.uuid) {
-                      dispatch(setUser({
-                        userId: utmParams.uuid,
-                        organization: utmParams.organization
-                      }));
-                    }
                     if (utmParams.hasOwnProperty('isWebview')) {
                       dispatch(setIsWebview(utmParams.isWebview === "true"));
                     }
-                    dispatch(initSurvey(surveyConfig));
                     initializeAgentMetadata(utmParams);
+                    dispatch(loadNextTask());
                     dispatch(setAppView('quiz'))
-                    eService.logEvent('initialized', {
-                      userId: utmParams.uuid,
-                      organization: utmParams.organization,
-                      survey: surveyConfig.surveyId,
-                    });
                 }} success>{uiText.playButtonText} <Play /></Button>
             </StartWrapper>
             <PeekingWrapper>

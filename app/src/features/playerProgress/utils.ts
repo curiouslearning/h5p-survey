@@ -15,7 +15,7 @@ console.log(preReqs);
 function findReqObj (index: SurveyType): ISurvey {
   const reqObj = preReqs.find((req: ISurvey) => {
     const parsedId = parseInt(req.id.toString());
-    const parsedIndex = parseInt(index.toString());
+    const parsedIndex = parseInt(index);
     console.log(`comparing ${parsedId} to ${parsedIndex}`);
     if (parsedId === parsedIndex) {
       return req;

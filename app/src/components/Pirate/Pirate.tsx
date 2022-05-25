@@ -12,7 +12,7 @@ import {
     ThumbsUpPirate,
 } from './animations/';
 
-const successAnimations = ['pirate-jump', 'pirate-jump-clap', 'pirate-thumbsup', 'pirate-jump-v2']
+const feedbackAnimations = ['pirate-jump', 'pirate-jump-clap', 'pirate-thumbsup', 'pirate-jump-v2']
 
 const timeoutValue: number = 2500;
 let animationEndTimeout: ReturnType<typeof setTimeout>;
@@ -34,9 +34,9 @@ const StandingPirate = () => (
     </svg>
 )
 const Pirate = (props: any) => {
-    const { animate, success, successfulAnimation, successfulAudio } = props;
+    const { animate, feedbackAnimation, feedbackAudio } = props;
     const [animation, setAnimation] = useState('none');
-    const animationAudio = useRef(successfulAudio)
+    const animationAudio = useRef(feedbackAudio)
 
     useEffect(() => {
         svgatorInit();
@@ -45,17 +45,13 @@ const Pirate = (props: any) => {
     useEffect(() => {
         clearTimeout(animationEndTimeout);
         if (animate) {
-            if (success) {
-              console.log(props.successfulAudio);
-                if (successfulAnimation && successfulAnimation !== 'pirate-random') {
-                    setAnimation(successfulAnimation);
-                } else {
-                    setAnimation(successAnimations[Math.floor(Math.random() * 4)]);
-                }
-                setTimeout(() => animationAudio.current && animationAudio.current.play(), 300);
+          console.log(props.feedbackAudio);
+            if (feedbackAnimation && feedbackAnimation !== 'pirate-random') {
+                setAnimation(feedbackAnimation);
             } else {
-                setAnimation('pirate-surprised');
+                setAnimation(feedbackAnimations[Math.floor(Math.random() * 4)]);
             }
+            setTimeout(() => animationAudio.current && animationAudio.current.play(), 300);
             animationEndTimeout = setTimeout(props.onAnimationEnd, timeoutValue);
         }
         return () => {
@@ -72,7 +68,7 @@ const Pirate = (props: any) => {
             { animate && animation === 'pirate-thumbsup' && <ThumbsUpPirate />}
             { animate && animation === 'pirate-jump-clap' && <ClapJumpingPirate />}
             { animate && animation === 'pirate-surprised' && <SurprisedPirate />}
-            <audio ref={animationAudio} controls style={{ display: 'none' }} src={props.successfulAudio}></audio>
+            <audio ref={animationAudio} controls src={props.feedbackAudio} style={{ display: 'none' }} ></audio>
         </>
     );
 }

@@ -30,11 +30,11 @@ export const Instructions = styled.div`
 `
 
 export const CharacterWrapper = styled.div`
-    height: 200px;
+    height: 130px;
     padding: 15px;
     display: flex;
     align-content: center;
-    flex: 0 0 180px;
+    flex: 0 1 130px;
     svg {
         height: 100%;
         width: auto;
@@ -98,7 +98,6 @@ export const ContentWrapper = styled.div`
     flex-grow: 1;
     width: 100%;
     display: inline-flex;
-    align-items: center;
     flex-direction: column;
     justify-content: center;
 `
@@ -106,24 +105,26 @@ export const ContentWrapper = styled.div`
 export const Answers = styled.ul<{ length: number, hasAnswer: boolean; optionStyle?: string; mixedCaseFriendly?: boolean; }>`
     display: grid;
     grid-auto-flow: row;
-    grid-template-columns: repeat(${props => props.length/2}, 1fr);
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
     list-style: none;
-    max-width: 560px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 30px;
+    max-width: 360px;
     width: 100%;
     margin: 6px auto;
     position: relative;
 
     ${props => props.optionStyle === 'list' && css`
         flex-direction: column;
-        margin: 10px auto;
+        margin: 5px auto;
     `}
 
     ${props => props.mixedCaseFriendly && css`
         font-family: 'Verdana', sans-serif;
     `}
 `
-
 export const FeedbackWrapper = styled.div<IFeedbackWrapper>`
     display: inline-flex;
     width: 100%;
@@ -134,7 +135,7 @@ export const FeedbackWrapper = styled.div<IFeedbackWrapper>`
     flex-grow: 0;
     font-size: 28px;
     font-weight: 700;
-    padding: 30px;
+    padding: 10px;
     box-sizing: border-box;
     margin-top: auto;
 
