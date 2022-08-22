@@ -1,0 +1,9 @@
+[submodule "H5PEditor.RangeList"]
+	path = H5PEditor.RangeList
+	url = https://github.com/h5p/h5p-editor-range-list
+[submodule "H5PEditor.ShowWhen"]
+	path = H5PEditor.ShowWhen
+	url = https://github.com/h5p/h5p-editor-show-when
+[submodule "H5PEditor.TableList"]
+	path = H5PEditor.TableList
+	url = https://github.com/h5p/h5p-editor-table-list

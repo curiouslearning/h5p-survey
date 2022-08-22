@@ -77,16 +77,16 @@ const Landing = () => {
     const ipToken = useAppSelector((state) => state.config.ipToken);
 
 
-    const initializeAgentMetadata = (utmParams: any) => {
+    const initializeAgentMetadata = async (utmParams: any) => {
       const cookies = new Cookies();
-      const response = await fetch(`https://ipinfo.io/json?token=${ipToken}`)
+      const response = await fetch(`https://ipinfo.io/json?token=${ipToken}`);
       if(!response.ok) {
         console.error(`agent profile failed to update! encountered error ${response.statusText}`);
       }
       let location = {};
-      let agentName = ""
-      let registration ="";
-      const jsonResponse = await response.json()
+      let agentName = "";
+      let registration = "";
+      const jsonResponse = await response.json();
       if(jsonResponse) {
         const id = uuidv4();
         let setVal = cookies.get('uuid');
@@ -94,7 +94,7 @@ const Landing = () => {
           cookies.set('uuid', id, {path: '/'});
           setVal = id;
         }
-        agentName = setVal
+        agentName = setVal;
         registration = id;
         location = {
           city: jsonResponse.city,
@@ -119,6 +119,7 @@ const Landing = () => {
         organization: utmParams.uuid? utmParams.uuid: "https://literacytracker.org",
         agentName,
       });
+      
       eService.logEvent('initialized', {
         userId: utmParams.uuid? utmParams.uuid : agentName,
         organization: utmParams.uuid? utmParams.organization : "https://literacytracker.org",
@@ -131,7 +132,7 @@ const Landing = () => {
       window.dispatchEvent(new Event('resize'));
     }, [])
 
-    //integrate with Unity WebView for embedded surveys
+    // integrate with Unity WebView for embedded surveys
     if (isWebview) {
       try {
         const controls = document
@@ -149,10 +150,20 @@ const Landing = () => {
       }
     }
 
+    useEffect(() => {
+      if (utmParams.hasOwnProperty('isWebview')) {
+        dispatch(setIsWebview(utmParams.isWebview === 'true'));
+      }
+
+      initializeAgentMetadata(utmParams);
+      dispatch(loadNextTask());
+      dispatch(setAppView('quiz'));
+    });
+
 
     return (
         <Wrapper>
-            <ThreeMonstersWrapper>
+            {/* <ThreeMonstersWrapper>
                 <ThreeMonsters />
             </ThreeMonstersWrapper>
             <StartWrapper>
@@ -167,9 +178,10 @@ const Landing = () => {
             </StartWrapper>
             <PeekingWrapper>
                 <PeekingMonster />
-            </PeekingWrapper>
+            </PeekingWrapper> */}
         </Wrapper>
     )
+  }
 }
 
 export default Landing;

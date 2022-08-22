@@ -9,6 +9,8 @@ import Pirate from './Pirate/Pirate';
 import Scorebar from './Scorebar/Scorebar';
 import ThreeMonsters from './ThreeMonsters/ThreeMonsters';
 import PeekingMonster from './PeekingMonster/PeekingMonster';
+import Chest from './Chest/Chest';
+import Star from './Star/Star';
 
 export {
     AudioPlayer,
@@ -22,4 +24,6 @@ export {
     Pirate,
     Scorebar,
     ThreeMonsters,
+    Chest,
+    Star,
 }

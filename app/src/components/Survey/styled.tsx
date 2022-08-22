@@ -14,6 +14,10 @@ export const Wrapper = styled.div`
     align-items: center;
     justify-content: space-around;
     position: relative;
+    background-image: url(https://curiousreader.org/wp-content/uploads/bg_crayon-1.png);
+    background-position: top center;
+    background-size: contain;
+    background-repeat: no-repeat; 
 `
 
 export const Instructions = styled.div`
@@ -27,6 +31,31 @@ export const Instructions = styled.div`
     margin: 5px auto;
     justify-content: center;
     flex-direction: row;
+`
+
+export const ChestWrapper = styled.div`
+    height: 200px;
+    padding: 15px;
+    display: flex;
+    align-content: center;
+    flex: 0 0 180px;
+    svg {
+        height: 60%;
+        width: auto;
+    }
+`
+
+export const StarsWrapper = styled.div`
+    height: 80px;
+    padding: 15px;
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    grid-gap: 12px;
+    align-content: center;
+    svg {
+        height: 30px;
+        width: auto;
+    }
 `
 
 export const CharacterWrapper = styled.div`

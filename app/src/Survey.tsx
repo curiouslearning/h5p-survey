@@ -35,15 +35,19 @@ import {
     ImageOption,
     Option,
     Pirate,
+    Chest,
+    Star,
 } from './components/';
 import {
     Answers,
-    CharacterWrapper,
+    CharacterWrapper as ChestWrapper,
     CheckAnswer,
     ContentWrapper,
     Debug,
     FeedbackWrapper,
     Instructions,
+    ChestWrapper,
+    StarsWrapper,
     Question,
     SurveyNav,
     Wrapper,
@@ -75,16 +79,23 @@ const Survey = (props: any) => {
     const [animate, setAnimate] = useState(false);
     const [taskStartTime, setTaskStartTime] = useState(0);
 
+    const starsWrapperRef = useRef(null);
+
+    const starCollectingAudio = useRef('https://literacytracker.org/wp-content/uploads/2022/08/ftm_collecting_audio.mp3');
+
+    const [awardStars, updateStars] = useState([ false, false, false, false, false,
+        false, false, false, false, false,
+        false, false, false, false, false, ]);
+
     console.log(feedback.feedbackAudio);
     const feedbackAudioPath = H5P.getPath(
       feedback.feedbackAudio? feedback.feedbackAudio[0].path : "",
       surveyConfig.contentId
     );
 
-
     const eService = new EventService();
 
-   // Hooks goes here
+    // Hooks goes here
     useEffect(() => {
         setSelectedOption(null);
         setTimeout(() => resizeH5P, 10);
@@ -136,7 +147,6 @@ const Survey = (props: any) => {
         win.dispatchEvent(new Event('resize'))
     }
 
-
     // USED IN DEV
     if (!activeTask) {
         return (<div>Loading...</div>)
@@ -155,16 +165,17 @@ const Survey = (props: any) => {
           survey: surveyConfig.surveyId,
           duration: taskEndTime - taskStartTime
         });
+        activateRandomStarOnAnswer();
         setAnimate(true);
         resizeH5P();
     }
-
 
     const handleAnswer = (option: number) => {
       setTaskAnswered(true);
       setSelectedOption(option);
       eService.logEvent('interacted', activeTask);
     }
+
     const onAnimationEnd = () => {
         setAnimate(false);
 
@@ -203,16 +214,72 @@ const Survey = (props: any) => {
      })
     }
 
+    const activateRandomStarOnAnswer = () => {
+        let falseIndices = [];
+
+        let stars = awardStars.map((x) => x);
+
+        for (let i = 0; i < stars.length; i++) {
+            if (!awardStars[i]) {
+                const index = i;
+                falseIndices.push(index);
+            }
+        }
+
+        const randomFalseIndex = Math.floor(Math.random() * falseIndices.length);
+
+        const starIndex = falseIndices[randomFalseIndex];
+
+        stars[starIndex] = true;
+
+        updateStars(stars);
+        
+        if (starCollectingAudio.current) {
+            starCollectingAudio.current.play();
+        }
+    }
+
+    const renderStar = (id: number) => {
+        const hiddenStyle = {
+            visibility: 'hidden',
+            transition: 'visibility 0s, opacity 0.5s linear',
+            opacity: '0',
+        } as React.CSSProperties;
+        const shownStyle = {
+            visibility: 'visible',
+            transition: 'visibility 0s, opacity 0.5s linear',
+            opacity: '1',
+        } as React.CSSProperties;
+
+        if (awardStars[id]) {
+            return <Star elementStyle={shownStyle} />
+        } else {
+            return <Star elementStyle={hiddenStyle} />
+        }
+    }
+
     return (
         <Wrapper>
             <ContentWrapper>
+                <StarsWrapper ref={starsWrapperRef}>
+                    {awardStars.map((star: boolean, index: number) => {
+                        return (renderStar(index));
+                    })}
+                </StarsWrapper>
                 <Instructions>
-                    { !showDebug && <CharacterWrapper>
-                        <Character
+                    { !showDebug && <ChestWrapper>
+                        {/* <Character
                             animate={animate}
                             feedbackAudio={feedbackAudioPath}
                             onAnimationEnd={onAnimationEnd}
                             successfulAnimation={feedback.feedbackAnimation}
+                        /> */}
+                        <Chest
+                            animate={animate}
+                            success={true}
+                            successfulAudio={feedbackAudioPath}
+                            onAnimationEnd={onAnimationEnd}
+                            successfulAnimation={'chest-opened'}
                         />
                     { activeTask && !taskAnswered && activeTask.audioFile
                         && !surveyIsCompleted &&
@@ -221,7 +288,7 @@ const Survey = (props: any) => {
                           autoplay = {false}
                         />
                     }
-                    </CharacterWrapper> }
+                    </ChestWrapper> }
 
                     { activeTask && activeTask.text &&
                       !surveyIsCompleted && !taskAnswered &&
@@ -266,6 +333,7 @@ const Survey = (props: any) => {
             }
             <SurveyNav>
             </SurveyNav>
+            {<audio ref={starCollectingAudio} controls style={{ display: 'none' }} src={'https://literacytracker.org/wp-content/uploads/2022/08/ftm_collecting_audio.mp3'}></audio>}
         </Wrapper>
     )
 }

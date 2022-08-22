@@ -2,7 +2,7 @@ const csv = require('csv-parser');
 const fs = require('fs');
 const path = require('path');
 const readline = require('readline-sync');
-const semantics = require('./src/semantics.json');
+const semantics = require('./app/src/semantics.json');
 
 const missingFiles = [];
 
@@ -141,6 +141,7 @@ const checkForFile = (filePath) => {
   }
   return true;
 }
+
 const main = () => {
   let surveyId = readline.question('Enter survey ID: ');
   let typeInput = readline.question('Enter survey type (1=Other, 2=OralVocab, 3=LetterSound, 4=ReadingVocab, 5=SightWords, 6=PseudoWords):\n');
