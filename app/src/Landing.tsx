@@ -17,6 +17,7 @@ import {
 } from './features/playerProgress/utils';
 import {
     loadNextTask,
+    initSurvey,
     // Selectors
 } from './features/survey/surveySlice';
 import {
@@ -127,11 +128,8 @@ const Landing = () => {
         registration,
         agentName
       });
-
-    useEffect(() => {
-      window.dispatchEvent(new Event('resize'));
-    }, [])
-
+    }
+    
     // integrate with Unity WebView for embedded surveys
     if (isWebview) {
       try {
@@ -146,10 +144,13 @@ const Landing = () => {
         if(e.message !== 'Unity is not defined') {
           console.warn(e.message);
         }
-
       }
     }
 
+    useEffect(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, [])
+  
     useEffect(() => {
       if (utmParams.hasOwnProperty('isWebview')) {
         dispatch(setIsWebview(utmParams.isWebview === 'true'));
@@ -159,7 +160,6 @@ const Landing = () => {
       dispatch(loadNextTask());
       dispatch(setAppView('quiz'));
     });
-
 
     return (
         <Wrapper>
@@ -181,7 +181,6 @@ const Landing = () => {
             </PeekingWrapper> */}
         </Wrapper>
     )
-  }
 }
 
 export default Landing;

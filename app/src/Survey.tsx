@@ -2,6 +2,7 @@ import React, {
     useCallback,
     useEffect,
     useState,
+    useRef,
 } from 'react';
 
 declare var H5P: any;
@@ -105,7 +106,7 @@ const Survey = (props: any) => {
     useEffect(() => {
         if (surveyIsCompleted) {
             console.log('completed');
-            dispatch(setAppView('endscreen'))
+            dispatch(setAppView('endscreen'));
         }
     }, [surveyIsCompleted])
 
@@ -215,9 +216,9 @@ const Survey = (props: any) => {
     }
 
     const activateRandomStarOnAnswer = () => {
-        let falseIndices = [];
+        const falseIndices = [];
 
-        let stars = awardStars.map((x) => x);
+        const stars = awardStars.map((x) => x);
 
         for (let i = 0; i < stars.length; i++) {
             if (!awardStars[i]) {

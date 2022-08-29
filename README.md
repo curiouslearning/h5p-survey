@@ -29,3 +29,22 @@ There are three different scripts used when building the library's production bu
 * Completed full quiz
 * Interacted with question option - interacted with one of the answer options of a question.
 * Interacted with "Success" or "Failed" button in endscreen.
+
+## Prerequisites
+Node >=v.14.7.x
+npm >=v.6.14.x
+WINDOWS ONLY: 7zip
+Admin access to dev and production Wordpress environments.
+
+## Generating a Production or Staging Build
+Clone the repo from: https://github.com/curiouslearning/h5p-survey.git
+From the top level directory run npm install
+Run npm run build-src to build the source using Webpack
+Run npm run windows-build-h5p to build an h5p file
+
+## Uploading a Build to Production or Staging
+Sign into the production/staging site’s wp-admin page
+On the admin toolbar on the left hand side, select H5P Content > LIbraries
+On the subsequent page, in the Upload LIbraries widget, select the “Choose File” radio button
+Use the “Upload” button to upload and update the library on the server.
+
