@@ -18,6 +18,7 @@ import {
 import {
     loadNextTask,
     initSurvey,
+    selectTaskList,
     // Selectors
 } from './features/survey/surveySlice';
 import {
@@ -76,6 +77,7 @@ const Landing = () => {
     const uiText = useAppSelector(selectUiText);
     const isWebview = useAppSelector(selectIsWebView);
     const ipToken = useAppSelector((state) => state.config.ipToken);
+    const taskList = useAppSelector(selectTaskList);
 
 
     const initializeAgentMetadata = async (utmParams: any) => {
@@ -159,7 +161,7 @@ const Landing = () => {
       initializeAgentMetadata(utmParams);
       dispatch(loadNextTask());
       dispatch(setAppView('quiz'));
-    });
+    }, [taskList]);
 
     return (
         <Wrapper>

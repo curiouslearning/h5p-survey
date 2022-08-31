@@ -126,7 +126,7 @@ const Survey = (props: any) => {
     useEffect(() => {
         if (shouldLoadNextTask) {
             setTimeout(() => {
-              dispatch(loadNextTask())
+              dispatch(loadNextTask());
               dispatch(setPromptStatus(false));
               setTaskAnswered(false);
             }, 2)

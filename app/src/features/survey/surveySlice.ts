@@ -127,6 +127,8 @@ export const selectActiveTask = (state: IRootState) => state.survey.activeTask;
 export const selectTestDuration = (state: IRootState) => state.survey.duration;
 export const selectTestStartTime = (state: IRootState) => state.survey.startTime;
 export const selectTestEndTime = (state: IRootState) => state.survey.endTime;
+export const selectTaskList = (state: IRootState) => state.survey.taskList;
+
 // Selector for retreiving the score and max score for the survey
 
 
