@@ -17,7 +17,8 @@ const Wrapper = styled.button<IButtonStyled>`
     font-weight: 700;
     border-radius: 38px;
     background: #999393;
-    padding: 10px 30px;
+    background-color: #508F00;
+    padding: 10px 50px;
     box-sizing: border-box;
     border: none;
     font-family: 'Nunito', sans-serif;
@@ -56,13 +57,12 @@ const Wrapper = styled.button<IButtonStyled>`
     `}
 
     svg {
-        margin-left: 15px;
+        color: #fff;
     }
 
     ${props => props.iconLeft && css`
         svg {
             margin-left: 0;
-            margin-right: 10px;
         }
     `}
 `

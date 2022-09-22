@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 const H5PDispatcher = new H5P.EventDispatcher();
 
-import { LinkButton, Button, Pirate, Scorebar } from './components';
+import { LinkButton, Button, Pirate, Scorebar, ThreeMonsters } from './components';
 import { Eye, Retry, Close } from './icons';
 import { ContentType } from './features/models';
 import { useAppDispatch, useAppSelector } from './hooks';
@@ -34,19 +34,26 @@ import { setAppView } from './features/ui/uiSlice';
 import EventService from './features/xAPI/eventService';
 
 const Wrapper = styled.div`
-    background-color: #fff;
-    max-width: 620px;
-    width: 90%;
     display: inline-flex;
-    flex: 1;
-    padding: 40px;
-    text-align: center;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-sizing: border-box;
-    border-radius: 20px;
-    box-shadow: 0px 7px 25px -10px rgba(9, 23, 74, 0.3);
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-image: url(https://curiousreader.org/wp-content/uploads/bg_crayon-1.png);
+    background-position: top center;
+    background-size: contain;
+    background-repeat: no-repeat; 
+`
+
+const ThreeMonstersWrapper = styled.div`
+    max-width: 300px;
+    padding-bottom: 50px;
+    svg {
+        width: 100%;
+        height: auto;
+    }
 `
 
 const PirateWrapper = styled.div`
@@ -91,9 +98,10 @@ const Endscreen = (props: any) => {
     }
 
     useEffect(() => {
-        dispatch(setSurveyCompleted())
+        console.log('Endscreen: useEffect Completion event!');
+        dispatch(setSurveyCompleted());
         // Log that the quiz has been completed
-        eService.logEvent('terminated', {
+        eService.logEvent('completed', {
           userId: identifiers.userId,
           organization: identifiers.organization,
           agentName: identifiers.agentName,
@@ -108,25 +116,27 @@ const Endscreen = (props: any) => {
     const handleClose = () => {
       console.log('closing');
       try {
-        if (nextSurvey !== ContentType.None) {
-          const result = createRequirementsObject();
-          if (satisfiesPreReqs(result, nextSurvey, nextContent)) {
-            let url = getSurveyURL(nextSurvey, nextContent);
-            let params = window.location.search;
-            url += params;
-            window.top.location = url;
-          } else if(!isWebview) {
-            window.top.location = getSurveyURL(ContentType.None, nextContent);
-          } else {
+        // if (nextSurvey !== ContentType.None) {
+        //   const result = createRequirementsObject();
+        //   if (satisfiesPreReqs(result, nextSurvey, nextContent)) {
+        //     let url = getSurveyURL(nextSurvey, nextContent);
+        //     let params = window.location.search;
+        //     url += params;
+        //     window.top.location = url;
+        //   } else if(!isWebview) {
+        //     window.top.location = getSurveyURL(ContentType.None, nextContent);
+        //   } else {
+        //     Unity.call('close');
+        //   }
+        // }
+        // else if (!isWebview) {
+        //   window.top.location = getSurveyURL(ContentType.None, nextContent);
+        // }
+        // else {
+        if (typeof Unity !== 'undefined') {
             Unity.call('close');
-          }
         }
-        else if (!isWebview) {
-          window.top.location = getSurveyURL(ContentType.None, nextContent);
-        }
-        else {
-          Unity.call('close');
-        }
+        // }
       } catch (e) {
       if (e.message !== 'Unity is not defined') {
         throw e;
@@ -136,13 +146,16 @@ const Endscreen = (props: any) => {
 
     return (
         <Wrapper>
-            <PirateWrapper>
-                <Pirate animate={false} />
-            </PirateWrapper>
-            <h2>{uiText.resultText}:</h2>
+            <ThreeMonstersWrapper>
+                {/* <Pirate animate={false} />
+                 */}
+                <ThreeMonsters />
+            </ThreeMonstersWrapper>
+            {/* <h2>{uiText.resultText}:</h2> */}
             <Actions>
-                { <Button transparent iconLeft onClick={handleClose()}>
-                    <Close /> { uiText.closeButtonText }
+                { <Button onClick={handleClose}>
+                    <Close /> 
+                    {/* { uiText.closeButtonText } */}
                   </Button>
                 }
             </Actions>

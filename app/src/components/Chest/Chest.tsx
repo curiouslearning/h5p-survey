@@ -44,7 +44,7 @@ const Chest = (props: any) => {
             // animationEndTimeout = setTimeout(() => {
             // }, timeoutValue);
             if (typeof Unity !== 'undefined') {
-                Unity.Call("Debug: Chest animation end called.");
+                Unity.call("Debug: Chest animation end called.");
             }
             props.onAnimationEnd();
         }

@@ -17,7 +17,7 @@ import {
 } from './features/playerProgress/utils';
 import {
     loadNextTask,
-    initSurvey,
+    loadFirstTask,
     selectTaskList,
     // Selectors
 } from './features/survey/surveySlice';
@@ -43,10 +43,14 @@ const Wrapper = styled.div`
     width: 100%;
     height: 100%;
     position: relative;
+    background-image: url(https://curiousreader.org/wp-content/uploads/bg_crayon-1.png);
+    background-position: top center;
+    background-size: contain;
+    background-repeat: no-repeat;
 `
 
 const ThreeMonstersWrapper = styled.div`
-    max-width: 320px;
+    max-width: 300px;
     padding-bottom: 50px;
     svg {
         width: 100%;
@@ -62,7 +66,7 @@ const StartWrapper = styled.div`
 
 const PeekingWrapper = styled.div`
     position: absolute;
-    bottom: 0;
+    bottom: 4px;
     height: 150px;
     padding-top: 150px;
     z-index: 1;
@@ -79,6 +83,7 @@ const Landing = () => {
     const ipToken = useAppSelector((state) => state.config.ipToken);
     const taskList = useAppSelector(selectTaskList);
 
+    let hasInitializedAlready = false;
 
     const initializeAgentMetadata = async (utmParams: any) => {
       const cookies = new Cookies();
@@ -125,7 +130,8 @@ const Landing = () => {
       
       eService.logEvent('initialized', {
         userId: utmParams.uuid? utmParams.uuid : agentName,
-        organization: utmParams.uuid? utmParams.organization : "https://literacytracker.org",
+        locdata: location,
+        organization: utmParams.uuid ? utmParams.organization : "https://literacytracker.org",
         survey: surveyConfig.surveyId,
         registration,
         agentName
@@ -154,31 +160,33 @@ const Landing = () => {
     }, [])
   
     useEffect(() => {
-      if (utmParams.hasOwnProperty('isWebview')) {
-        dispatch(setIsWebview(utmParams.isWebview === 'true'));
-      }
-
-      initializeAgentMetadata(utmParams);
-      dispatch(loadNextTask());
-      dispatch(setAppView('quiz'));
+      // setTimeout(() => {
+      //   if (utmParams.hasOwnProperty('isWebview')) {
+      //     dispatch(setIsWebview(utmParams.isWebview === 'true'));
+      //   }
+  
+      //   initializeAgentMetadata(utmParams, );
+      //   dispatch(loadFirstTask());
+      //   dispatch(setAppView('quiz'));
+      // }, 500);
     }, [taskList]);
 
     return (
-        <Wrapper>
-            {/* <ThreeMonstersWrapper>
+        <Wrapper onClick={() => {
+              if (utmParams.hasOwnProperty('isWebview')) {
+                dispatch(setIsWebview(utmParams.isWebview === "true"));
+              }
+              initializeAgentMetadata(utmParams);
+              dispatch(loadNextTask());
+              dispatch(setAppView('quiz'));
+            }}>
+            <ThreeMonstersWrapper>
                 <ThreeMonsters />
             </ThreeMonstersWrapper>
             <StartWrapper>
-                <Button onClick={() => {
-                    if (utmParams.hasOwnProperty('isWebview')) {
-                      dispatch(setIsWebview(utmParams.isWebview === "true"));
-                    }
-                    initializeAgentMetadata(utmParams);
-                    dispatch(loadNextTask());
-                    dispatch(setAppView('quiz'))
-                }} success>{uiText.playButtonText} <Play /></Button>
+                <Button success>{} <Play /></Button>
             </StartWrapper>
-            <PeekingWrapper>
+            {/* <PeekingWrapper>
                 <PeekingMonster />
             </PeekingWrapper> */}
         </Wrapper>

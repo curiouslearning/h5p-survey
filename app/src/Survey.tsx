@@ -41,7 +41,7 @@ import {
 } from './components/';
 import {
     Answers,
-    CharacterWrapper as ChestWrapper,
+    ChestWrapper,
     CheckAnswer,
     ContentWrapper,
     Debug,
@@ -73,9 +73,11 @@ const Survey = (props: any) => {
     const promptComplete = useAppSelector(state => state.survey.promptComplete);
     const promptType = useAppSelector(state => state.playerProgress.promptType);
     const identifiers = useAppSelector(selectIdentifiers);
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const utmParams = Object.fromEntries(urlSearchParams);
 
     const [shouldLoadNextTask, setShouldLoadNextTask] = useState(false);
-    const[taskAnswered, setTaskAnswered] = useState(false);
+    const [taskAnswered, setTaskAnswered] = useState(false);
     const [selectedOptionIndex, setSelectedOption] = useState(null);
     const [animate, setAnimate] = useState(false);
     const [taskStartTime, setTaskStartTime] = useState(0);
@@ -159,7 +161,7 @@ const Survey = (props: any) => {
         eService.logEvent('answered', {
           ...activeTask,
           userId: identifiers.userId,
-          organizaiton: identifiers.organization,
+          organization: utmParams.uuid ? utmParams.organization : "https://literacytracker.org",
           agentName: identifiers.agentName,
           registration: identifiers.registration,
           selectedOptionIndex,

@@ -19,11 +19,13 @@ import { useAppDispatch, useAppSelector } from './hooks';
 import Landing from './Landing';
 import Survey from './Survey';
 
+import './globalstyles/app.css';
+
 
 const Wrapper = styled.div`
     min-height: 100%;
     font-family: 'Nunito', sans-serif;
-    background-color: #F8F8FB;
+    background-color: #3d85d1;
     display: flex;
     width: 100%;
     align-items: center;

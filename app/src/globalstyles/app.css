@@ -1,0 +1,7 @@
+:global(.h5p-content) {
+    border: 0 !important;
+    background-color: #3d85d1 !important;
+}
+:global(.h5p-actions) {
+    display: none !important;
+}

@@ -58,18 +58,6 @@ export const StarsWrapper = styled.div`
     }
 `
 
-export const CharacterWrapper = styled.div`
-    height: 130px;
-    padding: 15px;
-    display: flex;
-    align-content: center;
-    flex: 0 1 130px;
-    svg {
-        height: 100%;
-        width: auto;
-    }
-`
-
 export const Question = styled.div`
     padding: 10px 20px;
     background-color: #fff;
@@ -127,6 +115,7 @@ export const ContentWrapper = styled.div`
     flex-grow: 1;
     width: 100%;
     display: inline-flex;
+    align-items: center;
     flex-direction: column;
     justify-content: center;
 `

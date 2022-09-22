@@ -69,6 +69,11 @@ const surveySlice = createSlice({
             }
         },
 
+        loadFirstTask(state: ISurveyState):void {
+          state.activeTaskIndex = 0;
+          state.activeTask = state.taskList[state.activeTaskIndex];
+        },
+
         setSurveyCompleted(state: ISurveyState):void {
           state.surveyIsCompleted = true;
           state.endTime = Date.now();
@@ -97,6 +102,7 @@ export const {
     setPromptStatus,
     loadQuestions,
     initSurvey,
+    loadFirstTask,
     loadNextTask,
     resetSurvey,
     setSurveyCompleted,

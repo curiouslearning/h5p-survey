@@ -22,10 +22,12 @@ interface IAudioPlayer {
 }
 
 const Wrapper = styled.div`
-    height: 85px;
-    width: 85px;
+    height: 100%;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
+    margin-left: 20px;
+    mergin-right: 20px;
     svg {
         height: 100%;
         width: auto;

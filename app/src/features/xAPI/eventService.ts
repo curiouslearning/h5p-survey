@@ -76,6 +76,7 @@ export default class EventService {
     xAPIEvent.data.statement.actor = this.getActor(e.userId, e.organization, e.agentName);
     xAPIEvent.data.statement.object['id'] = `https://data.curiouslearning.org/xAPI/activities/survey/${e.survey}`;
     xAPIEvent.data.statement.object['objectType'] = 'Activity';
+    xAPIEvent.data.statement.object['location'] = e.locdata;
     let definition = xAPIEvent.getVerifiedStatementValue(['object', 'definition']);
     definition.type = 'http://adlnet.gov/expapi/activities/survey';
     xAPIEvent.data.statement.timestamp = new Date(Date.now()).toISOString();
@@ -135,7 +136,7 @@ export default class EventService {
       case 'registered':
         this.logRegisteredStatement(e.actor, e);
         break;
-      case 'terminated':
+      case 'completed':
         this.logSurveyObjectStatement(name, e);
         break;
       case 'scored':
